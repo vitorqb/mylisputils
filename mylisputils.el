@@ -26,4 +26,22 @@
     (if (not (equal (read-string prompt) "keep"))
 	(kill-buffer buff))))
 
+(defun myutils/concat-file (dir file)
+  "Concat a file in a dir"
+  (concat (file-name-as-directory dir) file))
+
+;; -----------------------------------------------------------------------------
+;; Python utils
+;; -----------------------------------------------------------------------------
+(defun myutils/drop-to-python-shell (buff)
+  "Drops the buffer to a python shell (for example if you are in a test
+buffer and a (PDB) appears)."
+  (with-current-buffer buff
+    (setq buffer-read-only nil)
+    (let ((python-shell--interpreter nil)
+          (python-shell--interpreter-args nil)
+          (buff-process (get-buffer-process buff)))
+      (set-process-filter buff-process 'comint-output-filter)
+      (inferior-python-mode))))
+
 (provide 'mylisputils)
