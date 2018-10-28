@@ -17,6 +17,10 @@
 (require 'dash)
 (require 'dash-functional)
 
+;; Variables that should be kept dynamic
+(defvar python-shell--interpreter)
+(defvar python-shell--interpreter-args)
+
 (defun myutils/add-to-generic-path (x y)
   "Adds 'x' to some environmental variable 'y' (like PYTHONPATH)"
   (setenv y (concat x ":" (getenv y))))
@@ -59,6 +63,14 @@ buffer and a (PDB) appears)."
           (buff-process (get-buffer-process buff)))
       (set-process-filter buff-process 'comint-output-filter)
       (inferior-python-mode))))
+
+(defun myutils/compilation-filter-drop-to-python-on-pdb (buff-getter)
+  "When compilation enters '(Pdb)', activates the inferior-python-mode
+on the buffer returned by buff-getter"
+  (let ((line (buffer-substring compilation-filter-start (point))))
+    (cl-flet ((string-has-pdb? (x) (string-match-p (regexp-quote "(Pdb)") x)))
+      (when (string-has-pdb? line)
+        (myutils/drop-to-python-shell (funcall buff-getter))))))
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
