@@ -16,6 +16,7 @@
 ;;; code
 (require 'dash)
 (require 'dash-functional)
+(require 'mycompile)
 
 ;; Variables that should be kept dynamic
 (defvar python-shell--interpreter)
@@ -71,6 +72,27 @@ on the buffer returned by buff-getter"
     (cl-flet ((string-has-pdb? (x) (string-match-p (regexp-quote "(Pdb)") x)))
       (when (string-has-pdb? line)
         (myutils/drop-to-python-shell (funcall buff-getter))))))
+
+(defun myutils/search-back-last-non-lib-error ()
+  "Int a pytest result, uses re-search-backward to find the last error
+that does not have /lib in it's path"
+  (interactive)
+  ;; Matches lines not beggining with space that have the pattern
+  ;; ...blablabla.py:<line_number>:
+  (re-search-backward "^\\([^\s\n\t]\\)\\(.+\\)\.py:[0-9]+:")
+  ;; When the found line has a /lib/, call itself again.
+  (when (->> (thing-at-point 'line) (string-match "^.+/lib/.+$"))
+    (myutils/search-back-last-non-lib-error)))
+
+(defun myutils/run-django-management-command (manage-path buff-name)
+  "For django. Prompts the user for a manage.py command and run it.
+manage-path must be the entire path to manage.py."
+  (interactive)
+  (let* ((manage-cmd-opts '("showmigrations" "makemigrations" "migrate"))
+         (manage-cmd (completing-read "Choose a command: " manage-cmd-opts))
+         (manage-cmd-args (read-string "With args: "))
+         (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
+    (mycompile (string-join cmd " ") buff-name t)))
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
