@@ -94,5 +94,20 @@ manage-path must be the entire path to manage.py."
          (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
     (mycompile (string-join cmd " ") buff-name t)))
 
+;;------------------------------------------------------------------------------
+;; Js Utils
+;; -----------------------------------------------------------------------------
+(defun myutils/flycheck-eslint/set-executable ()
+  "Prompts the user for a eslint executable."
+  (interactive)
+  (let* ((project-root (read-directory-name
+                        "Project root (where node_modules is): "))
+         (path (myutils/concat-file project-root "node_modules/.bin/eslint")))
+    (when (not (file-exists-p path))
+      (error (format "ERROR -> File %s does not exist" path)))
+    (setq flycheck-javascript-eslint-executable path)
+    (message "flycheck-javascript-eslint-executable set to %s" path)))
+
+
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
