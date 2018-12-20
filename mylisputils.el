@@ -109,5 +109,12 @@ manage-path must be the entire path to manage.py."
     (message "flycheck-javascript-eslint-executable set to %s" path)))
 
 
+(defun myutils/jest/occur-with-tests ()
+  "Runs occur to find the definition of tests"
+  (interactive)
+  (let ((list-matching-lines-face nil))
+    (occur "\\(it\\|describe\\|test\\)(.+)")))
+
+
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
