@@ -16,6 +16,7 @@
 ;;; code
 (require 'dash)
 (require 'dash-functional)
+(require 'mycompile)
 
 ;; Variables that should be kept dynamic
 (defvar python-shell--interpreter)
@@ -92,6 +93,38 @@ that does not have /lib in it's path"
   (when (buffer-modified-p)
     (error "Can not be called with buffer that has been modified."))
   (shell-command myutils/isort-cmd))
+
+(defun myutils/run-django-management-command (manage-path buff-name)
+  "For django. Prompts the user for a manage.py command and run it.
+manage-path must be the entire path to manage.py."
+  (interactive)
+  (let* ((manage-cmd-opts '("showmigrations" "makemigrations" "migrate"))
+         (manage-cmd (completing-read "Choose a command: " manage-cmd-opts))
+         (manage-cmd-args (read-string "With args: "))
+         (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
+    (mycompile (string-join cmd " ") buff-name t)))
+
+;;------------------------------------------------------------------------------
+;; Js Utils
+;; -----------------------------------------------------------------------------
+(defun myutils/flycheck-eslint/set-executable ()
+  "Prompts the user for a eslint executable."
+  (interactive)
+  (let* ((project-root (read-directory-name
+                        "Project root (where node_modules is): "))
+         (path (myutils/concat-file project-root "node_modules/.bin/eslint")))
+    (when (not (file-exists-p path))
+      (error (format "ERROR -> File %s does not exist" path)))
+    (setq flycheck-javascript-eslint-executable path)
+    (message "flycheck-javascript-eslint-executable set to %s" path)))
+
+
+(defun myutils/jest/occur-with-tests ()
+  "Runs occur to find the definition of tests"
+  (interactive)
+  (let ((list-matching-lines-face nil))
+    (occur "\\(it\\|describe\\|test\\)(.+)")))
+
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
