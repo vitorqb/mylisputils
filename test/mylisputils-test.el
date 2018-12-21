@@ -29,4 +29,8 @@
   (should (equal (myutils/concat-file "/home/vitor" "file") "/home/vitor/file"))
   (should (equal (myutils/concat-file "/home/vitor/" "f") "/home/vitor/f")))
 
+(ert-deftest test-myutils/li ()
+  (should (equal (macroexpand (myutils/li (message "Hola")))
+                 (list (lambda () (interactive) (message "Hola"))))))
+
 ;;; mylisputils-test.el ends here

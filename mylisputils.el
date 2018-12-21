@@ -51,6 +51,10 @@
   "Concat a file in a dir"
   (concat (file-name-as-directory dir) file))
 
+(defmacro myutils/li (body)
+  "Expands to an interactive lambda with no arguments"
+  `(lambda () (interactive) ,body))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
@@ -128,3 +132,5 @@ manage-path must be the entire path to manage.py."
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
+
+
