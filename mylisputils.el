@@ -53,6 +53,9 @@
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
+(defvar myutils/isort-cmd "isort"
+  "Command used to call isort")
+
 (defun myutils/drop-to-python-shell (buff)
   "Drops the buffer to a python shell (for example if you are in a test
 buffer and a (PDB) appears)."
@@ -71,6 +74,24 @@ on the buffer returned by buff-getter"
     (cl-flet ((string-has-pdb? (x) (string-match-p (regexp-quote "(Pdb)") x)))
       (when (string-has-pdb? line)
         (myutils/drop-to-python-shell (funcall buff-getter))))))
+
+(defun myutils/search-back-last-non-lib-error ()
+  "Int a pytest result, uses re-search-backward to find the last error
+that does not have /lib in it's path"
+  (interactive)
+  ;; Matches lines not beggining with space that have the pattern
+  ;; ...blablabla.py:<line_number>:
+  (re-search-backward "^\\([^\s\n\t]\\)\\(.+\\)\.py:[0-9]+:")
+  ;; When the found line has a /lib/, call itself again.
+  (when (->> (thing-at-point 'line) (string-match "^.+/lib/.+$"))
+    (myutils/search-back-last-non-lib-error)))
+
+(defun myutils/call-isort-on-current-file ()
+  "Calls isort on the current file"
+  (interactive)
+  (when (buffer-modified-p)
+    (error "Can not be called with buffer that has been modified."))
+  (shell-command myutils/isort-cmd))
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
