@@ -30,7 +30,23 @@
   (should (equal (myutils/concat-file "/home/vitor/" "f") "/home/vitor/f")))
 
 (ert-deftest test-myutils/li ()
-  (should (equal (macroexpand (myutils/li (message "Hola")))
-                 (list (lambda () (interactive) (message "Hola"))))))
+  (should (equal (myutils/li (message "Hola"))
+                 '(lambda () (interactive) (message "Hola")))))
+
+(ert-deftest test-myutils//clean-buffers-should-kill-p ()
+  (-let [myutils/clean-buffers-names-regexs (list "hola")]
+    (-let [buff (generate-new-buffer "hola")]
+      (should (myutils//clean-buffers-should-kill-p buff)))
+    (-let [buff (generate-new-buffer "rola")]
+      (should (not (myutils//clean-buffers-should-kill-p buff))))))
+
+(ert-deftest test-myutils//clean-buffers ()
+  (-let [myutils/clean-buffers-names-regexs (list "AA")]
+    (-let [buff (generate-new-buffer "AA")]
+      (myutils/clean-buffers)
+      (should (not (buffer-live-p buff))))
+    (-let [buff (generate-new-buffer "BB")]
+      (myutils/clean-buffers)
+      (should (buffer-live-p buff)))))
 
 ;;; mylisputils-test.el ends here

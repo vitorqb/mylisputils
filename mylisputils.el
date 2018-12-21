@@ -22,6 +22,11 @@
 (defvar python-shell--interpreter)
 (defvar python-shell--interpreter-args)
 
+;; Customizable variables
+(defvar myutils/clean-buffers-names-regexs
+  '("\\*ag search.+" "\\*Occur\\*" "magit-\\(log\\|diff\\)")
+  "A list of regexp for buffers to kill when cleaning, if name matches.")
+
 (defun myutils/add-to-generic-path (x y)
   "Adds 'x' to some environmental variable 'y' (like PYTHONPATH)"
   (setenv y (concat x ":" (getenv y))))
@@ -55,10 +60,25 @@
   "Expands to an interactive lambda with no arguments"
   `(lambda () (interactive) ,body))
 
+;; clean-buffers
+(defun myutils/clean-buffers ()
+  "Clean buffers whose names matches myutils/clean-buffers-names-regexs"
+  (interactive)
+  (->> (buffer-list)
+       (-filter #'myutils//clean-buffers-should-kill-p)
+       (-map #'kill-buffer)))
+
+(defun myutils//clean-buffers-should-kill-p (buff)
+  "Should buff be killed based on its name?"
+  (-let [buffnm (buffer-name buff)]
+    (-any? (lambda (r) (string-match-p r buffnm))
+           myutils/clean-buffers-names-regexs)))
+
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
-(defvar myutils/isort-cmd "isort"
+(defvar myutils/isort-cmd "isort -y"
   "Command used to call isort")
 
 (defun myutils/drop-to-python-shell (buff)
