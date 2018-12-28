@@ -99,12 +99,9 @@
 (defun myutils/copy-file-path-to-clipboard ()
   "Copy the current buffer file path to the clipboard."
   (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
+  (->> (if (equal major-mode 'dired-mode) default-directory (buffer-file-name))
+       (kill-new)
+       (message "Copied %s to the clipboard!")))
 
 (defun myutils/duplicate-buffer ()
   "Displays a copy of the current buffer in a new buffer and switch to it"
