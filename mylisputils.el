@@ -187,12 +187,32 @@ classes and fields."
     (setq flycheck-javascript-eslint-executable path)
     (message "flycheck-javascript-eslint-executable set to %s" path)))
 
-
 (defun myutils/jest/occur-with-tests ()
   "Runs occur to find the definition of tests"
   (interactive)
   (let ((list-matching-lines-face nil))
     (occur "\\(it\\|describe\\|test\\)(.+)")))
+
+(defun myutils/set-eslint-from-node-modules ()
+  "Looks for a `node_modules` if the directory hierarchy and, if finds,
+set's flycheck-javascript-eslint-executable to use the eslint from the
+node_modules instalation."
+  (interactive)
+  (-some--> (or (buffer-file-name) default-directory)
+            (locate-dominating-file it "node_modules")
+            (myutils/concat-file it "node_modules/.bin/eslint")
+            (and (file-executable-p it) it)
+            (setq flycheck-javascript-eslint-executable it)
+            (message (format "Set flycheck-javascript-eslint-executable to %s" it))))
+
+(defun myutils/active-flycheck-for-js ()
+  "Prepares js2-mode to use eslint from local node_modules"
+  (interactive)
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers '(javascript-jshint)))
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (add-hook 'js2-mode-hook #'myutils/set-eslint-from-node-modules)
+  (add-hook 'js2-mode-hook 'flycheck-mode-on-safe))
 
 
 (provide 'mylisputils)
