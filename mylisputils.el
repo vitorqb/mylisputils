@@ -96,6 +96,21 @@
     (-any? (lambda (r) (string-match-p r buffnm))
            myutils/clean-buffers-names-regexs)))
 
+(defun myutils/copy-file-path-to-clipboard ()
+  "Copy the current buffer file path to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(defun myutils/duplicate-buffer ()
+  "Displays a copy of the current buffer in a new buffer and switch to it"
+  (interactive)
+  (switch-to-buffer-other-window (current-buffer)))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
@@ -137,7 +152,8 @@ that does not have /lib in it's path"
   (interactive)
   (when (buffer-modified-p)
     (error "Can not be called with buffer that has been modified."))
-  (shell-command myutils/isort-cmd))
+  (shell-command (concat myutils/isort-cmd " " (buffer-file-name)))
+  (revert-buffer :ignore-auto :noconfirm))
 
 (defun myutils/run-django-management-command (manage-path buff-name)
   "For django. Prompts the user for a manage.py command and run it.
@@ -149,20 +165,12 @@ manage-path must be the entire path to manage.py."
          (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
     (mycompile (string-join cmd " ") buff-name t)))
 
-(defun myutils/copy-file-path-to-clipboard ()
-  "Copy the current buffer file path to the clipboard."
+(defun myutils/python-django-def-class-field-occur ()
+  "Calls occur for common python and django definitions of functions,
+classes and fields."
   (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-(defun myutils/duplicate-buffer ()
-  "Displays a copy of the current buffer in a new buffer and switch to it"
-  (interactive)
-  (switch-to-buffer-other-window (current-buffer)))
+  (let ((list-matching-lines-face nil))
+    (occur "\\(def\\s-\\|class\\s-\\|=.+\\(Field\\|Key\\)\\)")))
 
 
 ;;------------------------------------------------------------------------------
