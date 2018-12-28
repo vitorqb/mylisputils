@@ -7,7 +7,7 @@
 ;; Maintainer: Vitor <vitorqb@gmail.com>
 ;; Created: 2018-10-28
 ;; Keywords: elisp
-;; Homepage: https://bitbucket.org/vitorqb/mylisputils/
+;; Homepage: https://github.com/vitorqb/mylisputils/blob/development/mylisputils.el
 
 ;; This file is not part of GNU Emacs.
      

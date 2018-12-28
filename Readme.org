@@ -1,0 +1,5 @@
+#+TITLE: Vitor's elisp utilities
+
+This repository contains miscelaneous functions for Elisp that I use in my
+everyday emacs. There are dependencies linked to local files. Drop me a line
+if you would like to see them as well.
