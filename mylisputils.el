@@ -85,15 +85,16 @@
 (defun myutils/clean-buffers ()
   "Clean buffers whose names matches myutils/clean-buffers-names-regexs"
   (interactive)
-  (->> (buffer-list)
-       (-filter #'myutils//clean-buffers-should-kill-p)
-       (-map #'kill-buffer)))
+  (--> (buffer-list)
+       (-filter #'myutils//clean-buffers-should-kill-p it)
+       (-each it #'kill-buffer)))
 
 (defun myutils//clean-buffers-should-kill-p (buff)
   "Should buff be killed based on its name?"
-  (-let [buffnm (buffer-name buff)]
-    (-any? (lambda (r) (string-match-p r buffnm))
-           myutils/clean-buffers-names-regexs)))
+  (--> buff
+       (buffer-name it)
+       (-rpartial 'string-match-p it)
+       (-some? it myutils/clean-buffers-names-regexs)))
 
 (defun myutils/copy-file-path-to-clipboard ()
   "Copy the current buffer file path to the clipboard."
