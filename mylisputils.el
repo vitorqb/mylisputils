@@ -68,6 +68,11 @@
     (while (< (current-column) 80)
       (insert-char ?-))))
 
+(defun myutils/insert-date ()
+  "Inserts the curent date as YYYYMMDD"
+  (interactive)
+  (insert (format-time-string "%Y%m%d")))
+
 ;; clean-buffers
 (defun myutils/clean-buffers ()
   "Clean buffers whose names matches myutils/clean-buffers-names-regexs"
