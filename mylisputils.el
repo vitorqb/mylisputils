@@ -16,7 +16,6 @@
 ;;; code
 (require 'dash)
 (require 'dash-functional)
-(require 'mycompile)
 
 ;; Variables that should be kept dynamic
 (defvar python-shell--interpreter)
@@ -163,7 +162,7 @@ manage-path must be the entire path to manage.py."
          (manage-cmd (completing-read "Choose a command: " manage-cmd-opts))
          (manage-cmd-args (read-string "With args: "))
          (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
-    (mycompile (string-join cmd " ") buff-name t)))
+    (compile (string-join cmd " ") buff-name t)))
 
 (defun myutils/python-django-def-class-field-occur ()
   "Calls occur for common python and django definitions of functions,
