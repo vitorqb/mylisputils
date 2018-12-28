@@ -60,6 +60,14 @@
   "Expands to an interactive lambda with no arguments"
   `(lambda () (interactive) ,body))
 
+(defun myutils/fill-to-end ()
+  "Fills the screen with '-' until column 80"
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (while (< (current-column) 80)
+      (insert-char ?-))))
+
 ;; clean-buffers
 (defun myutils/clean-buffers ()
   "Clean buffers whose names matches myutils/clean-buffers-names-regexs"

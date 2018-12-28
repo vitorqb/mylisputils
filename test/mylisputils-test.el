@@ -49,4 +49,24 @@
       (myutils/clean-buffers)
       (should (buffer-live-p buff)))))
 
+(ert-deftest test-myutils/fill-to-end ()
+  ;; Single usage
+  (with-temp-buffer
+    (myutils/fill-to-end)
+    (should (equal (point) 1))
+    (should (equal (buffer-string) (make-string 80 ?-))))
+  ;; Line with previous content
+  (with-temp-buffer
+    (insert (make-string 40 ?A))
+    (myutils/fill-to-end)
+    (should (equal (buffer-string)
+                   (concat (make-string 40 ?A) (make-string 40 ?-)))))
+  ;; Usage when col after 80
+  (with-temp-buffer
+    (-let [inserted-text (make-string 80 ?B)]
+      (insert inserted-text)
+      (should (equal (buffer-string) inserted-text))
+      (myutils/fill-to-end)
+      (should (equal (buffer-string) inserted-text)))))
+
 ;;; mylisputils-test.el ends here
