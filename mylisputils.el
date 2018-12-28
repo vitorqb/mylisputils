@@ -149,6 +149,22 @@ manage-path must be the entire path to manage.py."
          (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
     (mycompile (string-join cmd " ") buff-name t)))
 
+(defun myutils/copy-file-path-to-clipboard ()
+  "Copy the current buffer file path to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(defun myutils/duplicate-buffer ()
+  "Displays a copy of the current buffer in a new buffer and switch to it"
+  (interactive)
+  (switch-to-buffer-other-window (current-buffer)))
+
+
 ;;------------------------------------------------------------------------------
 ;; Js Utils
 ;; -----------------------------------------------------------------------------
