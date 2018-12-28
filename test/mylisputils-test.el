@@ -69,4 +69,26 @@
       (myutils/fill-to-end)
       (should (equal (buffer-string) inserted-text)))))
 
+(ert-deftest test-myutils/remove-whitespace-and-newline/base ()
+    (with-temp-buffer
+      (insert "B   \n \t  C")
+      (goto-char 2)
+      (should (equal (string (char-after)) " "))
+      (myutils/remove-whitespace-and-newline)
+      (should (equal (char-after) ?C))))
+
+(ert-deftest test-myutils/remove-whitespace-and-newline/delete-none ()
+  (with-temp-buffer
+    (-let [text "ABC"]
+      (insert text)
+      (myutils/remove-whitespace-and-newline)
+      (should (equal (buffer-string) text)))))
+
+(ert-deftest test-myutils/remove-whitespace-and-newline/end-of-buffer ()
+  (with-temp-buffer
+    (-let [text "ABC"]
+      (insert text)
+      (end-of-buffer)
+      (myutils/remove-whitespace-and-newline)
+      (should (equal (buffer-string) text)))))
 ;;; mylisputils-test.el ends here

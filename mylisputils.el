@@ -73,6 +73,15 @@
   (interactive)
   (insert (format-time-string "%Y%m%d")))
 
+(defun myutils/remove-whitespace-and-newline ()
+  "Removes next character until it is no longer whitespace or newline"
+  (interactive)
+  (-let [chars-to-delete '(?\n ?\s ?\t)]
+    (while (-as-> (following-char) it
+                  (-partial #'char-equal it)
+                  (-any? it chars-to-delete))
+      (delete-char 1))))
+
 ;; clean-buffers
 (defun myutils/clean-buffers ()
   "Clean buffers whose names matches myutils/clean-buffers-names-regexs"
@@ -86,7 +95,6 @@
   (-let [buffnm (buffer-name buff)]
     (-any? (lambda (r) (string-match-p r buffnm))
            myutils/clean-buffers-names-regexs)))
-
 
 ;; -----------------------------------------------------------------------------
 ;; Python utils
