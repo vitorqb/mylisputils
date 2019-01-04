@@ -108,6 +108,11 @@
   (interactive)
   (switch-to-buffer-other-window (current-buffer)))
 
+(defun myutils/chmod-current-buffer (mode)
+  "Like chmod but with current buffer"
+  (interactive (list (read-file-modes "New mode: " (buffer-file-name))))
+  (chmod (buffer-file-name) mode))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
