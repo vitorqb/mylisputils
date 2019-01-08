@@ -1,0 +1,10 @@
+Available tasks:
+
+func-test            Calls functional tests for python
+migrate              Runs migrations
+populate-db          Calls the management commands to populate the db
+prepare-virtualenv   Prepares a virtualenv in a path
+runserver            Runs the development server
+test                 Runs functional and unit tests
+unit-test            Calls pytest for all unit tests.
+

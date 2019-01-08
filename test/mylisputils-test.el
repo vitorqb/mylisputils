@@ -91,4 +91,23 @@
       (end-of-buffer)
       (myutils/remove-whitespace-and-newline)
       (should (equal (buffer-string) text)))))
+
+
+(ert-deftest test-myutils/invoke-prompt-for-command ()
+  (with-temp-buffer
+    (insert-file-contents "./test/files/invoke-example-output.txt")
+    (let* ((prompted-options)           ;Stores the options prompted to the user
+           (result)                     ;Stores the result of the call
+           (list-fun (-const (buffer-string)))
+           (prompt-fun (lambda (opts) (progn (setq prompted-options opts) "test"))))
+
+      (let ((myutils/prompt-for-python-invoke--prompt-fun prompt-fun)
+            (myutils/prompt-for-python-invoke--get-tasks-list-fun list-fun))
+        (setq result (myutils/prompt-for-python-invoke)))
+           
+      (should (equal prompted-options '("func-test" "migrate" "populate-db"
+                                        "prepare-virtualenv" "runserver" "test"
+                                        "unit-test")))
+      (should (equal result "test")))))
+
 ;;; mylisputils-test.el ends here

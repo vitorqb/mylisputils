@@ -9,4 +9,5 @@
  (depends-on "ert-runner")
  (depends-on "el-mock")
  (depends-on "dash")
+ (depends-on "s")
  (depends-on "dash-functional"))

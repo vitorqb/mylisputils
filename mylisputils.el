@@ -16,6 +16,7 @@
 ;;; code
 (require 'dash)
 (require 'dash-functional)
+(require 's)
 
 ;; Variables that should be kept dynamic
 (defvar python-shell--interpreter)
@@ -173,6 +174,31 @@ classes and fields."
   (interactive)
   (let ((list-matching-lines-face nil))
     (occur "\\(def\\s-\\|class\\s-\\|=.+\\(Field\\|Key\\)\\)")))
+
+(defvar myutils/prompt-for-python-invoke--prompt-fun
+  (lambda (opts) (completing-read "Choose a task: " opts))
+  "Function used to prompt users for a python invoke command.")
+
+(defvar myutils/prompt-for-python-invoke--get-tasks-list-fun
+  (lambda () (shell-command-to-string "inv --list"))
+  "Function used to get the list of tasks for invoke.")
+
+(defun myutils/prompt-for-python-invoke ()
+  "Reads all invoke tasks calling inv --list, and prompts the user to select one"
+  (interactive)
+  (->> (funcall myutils/prompt-for-python-invoke--get-tasks-list-fun)
+       (s-lines)                     ;Split into lines
+       (cdr)                         ;Remove title
+       (-map #'s-trim)               ;Trims
+       (-map (-partial #'s-match "^[^ ]+")) ;Takes the first word of each line
+       (-filter #'identity)          ;Remove non matches
+       (-map #'car)                  ;Gets the first match
+       (funcall myutils/prompt-for-python-invoke--prompt-fun)))
+
+(defun myutils/python-invoke-task ()
+  "Prompts the user for an invoke task and calls invoke"
+  (interactive)
+  (compile (concat "invoke " (myutils/prompt-for-python-invoke)) t))
 
 
 ;;------------------------------------------------------------------------------
