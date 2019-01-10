@@ -158,7 +158,7 @@ that does not have /lib in it's path"
   (shell-command (concat myutils/isort-cmd " " (buffer-file-name)))
   (revert-buffer :ignore-auto :noconfirm))
 
-(defun myutils/run-django-management-command (manage-path buff-name)
+(defun myutils/run-django-management-command (manage-path)
   "For django. Prompts the user for a manage.py command and run it.
 manage-path must be the entire path to manage.py."
   (interactive)
@@ -166,7 +166,7 @@ manage-path must be the entire path to manage.py."
          (manage-cmd (completing-read "Choose a command: " manage-cmd-opts))
          (manage-cmd-args (read-string "With args: "))
          (cmd (list "python" manage-path manage-cmd manage-cmd-args)))
-    (compile (string-join cmd " ") buff-name t)))
+    (compile (string-join cmd " ") t)))
 
 (defun myutils/python-django-def-class-field-occur ()
   "Calls occur for common python and django definitions of functions,
