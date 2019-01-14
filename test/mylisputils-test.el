@@ -110,4 +110,24 @@
                                         "unit-test")))
       (should (equal result "test")))))
 
+
+(ert-deftest myutils/python-activate-venv/with-venv-dir ()
+  (let ((pyvenv-activate-arg))
+    (cl-letf (((symbol-function 'myutils/python-get-default-venv-path)
+               (lambda () "abc"))
+              ((symbol-function 'pyvenv-activate)
+               (lambda (a) (setq pyvenv-activate-arg a))))
+      (myutils/python-activate-venv)
+      (should (equal pyvenv-activate-arg "abc")))))
+
+(ert-deftest myutils/python-activate-venv/with-NO-venv-dir ()
+  (let ((call-interactively-arg))
+    (cl-letf (((symbol-function 'myutils/python-get-default-venv-path)
+               (lambda () nil))
+              ((symbol-function 'call-interactively)
+               (lambda (a) (setq call-interactively-arg a))))
+      (myutils/python-activate-venv)
+      (should (equal call-interactively-arg #'pyvenv-activate)))))
+
+
 ;;; mylisputils-test.el ends here

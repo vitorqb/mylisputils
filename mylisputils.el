@@ -201,6 +201,21 @@ classes and fields."
   (compile (concat "invoke " (myutils/prompt-for-python-invoke)) t))
 
 
+(defun myutils/python-activate-venv ()
+  "Activates a virtual environment."
+  (interactive)
+  (-if-let (venv-dir (myutils/python-get-default-venv-path))
+      (pyvenv-activate venv-dir)
+    (call-interactively #'pyvenv-activate)))
+
+(defun myutils/python-get-default-venv-path ()
+  "Looks for a venv folder in the current dir. Either returns a string with the
+   path for it or nil."
+  (-some->> '("venv" ".venv")
+            (-map (-partial #'myutils/concat-file default-directory))
+            (-filter #'file-directory-p)
+            (car)))
+
 ;;------------------------------------------------------------------------------
 ;; Js Utils
 ;; -----------------------------------------------------------------------------
