@@ -39,17 +39,20 @@
   "Adds the string x to the environmental variable MYPYPATH"
   (myutils/add-to-generic-path x "MYPYPATH"))
 
-(defun myutils/call-shell-command (c bname)
+(defun myutils/call-shell-command (c &optional bname)
   "Calls a shell command, put's the result in a new buffer
   and prompts to user whether to keep it or not.
   c -> the shell command 
   bname -> name of the buffer where to put it (may change if exists)"
-  (interactive "P")
+  (interactive (list (read-shell-command "Shell command: "
+                                         (car shell-command-history))))
   (let ((prompt "'keep' to keep the buffer or RET to kill it: ")
-	(buff (generate-new-buffer bname)))
+	(buff (generate-new-buffer (or bname "*MyShellCommand*"))))
     (display-buffer buff)
-    (shell-command c buff buff)
-    (if (not (equal (read-string prompt) "keep"))
+    (async-shell-command c buff buff)
+    ;; Remove sentinels so we are not told when process finishes
+    (set-process-sentinel (get-buffer-process buff) #'ignore)
+    (if (-> prompt (read-string) (equal "keep") (not))
 	(kill-buffer buff))))
 
 (defun myutils/concat-file (dir file)
