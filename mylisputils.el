@@ -117,6 +117,11 @@
   (interactive (list (read-file-modes "New mode: " (buffer-file-name))))
   (chmod (buffer-file-name) mode))
 
+(defun myutils/message-if-display-is-empty (msg)
+  "Sends the user a message if current-message returns null"
+  (if (equal (current-message) nil)
+      (message msg)))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
@@ -208,7 +213,10 @@ classes and fields."
   "Activates a virtual environment."
   (interactive)
   (-if-let (venv-dir (myutils/python-get-default-venv-path))
-      (pyvenv-activate venv-dir)
+      (->> venv-dir
+           ((lambda (x) (pyvenv-activate x) x))
+           (format "Activated venv %s!")
+           (myutils/message-if-display-is-empty))
     (call-interactively #'pyvenv-activate)))
 
 (defun myutils/python-get-default-venv-path ()
