@@ -268,6 +268,21 @@ node_modules instalation."
   (add-hook 'js2-mode-hook #'myutils/set-eslint-from-node-modules)
   (add-hook 'js2-mode-hook 'flycheck-mode-on-safe))
 
+;; -----------------------------------------------------------------------------
+;; Cider
+;; -----------------------------------------------------------------------------
+(defvar myutils/cider-default-port 4000)
+(defvar myutils/cider-default-host "127.0.0.1")
+
+(defun myutils/cider-quick-connect ()
+  "Calls cider-connect with default port and host"
+  (interactive)
+  (cider-connect (list :host myutils/cider-default-host
+                       :port myutils/cider-default-port)))
+
+;;
+;;
+;; 
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
