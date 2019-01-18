@@ -131,6 +131,7 @@
 (defun myutils/drop-to-python-shell (buff)
   "Drops the buffer to a python shell (for example if you are in a test
 buffer and a (PDB) appears)."
+  (interactive (list (current-buffer)))
   (with-current-buffer buff
     (setq buffer-read-only nil)
     (let ((python-shell--interpreter nil)
