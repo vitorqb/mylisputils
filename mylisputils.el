@@ -272,7 +272,7 @@ node_modules instalation."
 ;; -----------------------------------------------------------------------------
 ;; Cider
 ;; -----------------------------------------------------------------------------
-(defvar myutils/cider-default-port 4000)
+(defvar myutils/cider-default-port 4123)
 (defvar myutils/cider-default-host "127.0.0.1")
 
 (defun myutils/cider-quick-connect ()
