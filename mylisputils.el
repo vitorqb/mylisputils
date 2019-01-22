@@ -270,7 +270,7 @@ node_modules instalation."
   (add-hook 'js2-mode-hook 'flycheck-mode-on-safe))
 
 ;; -----------------------------------------------------------------------------
-;; Cider
+;; Cider/Clojure
 ;; -----------------------------------------------------------------------------
 (defvar myutils/cider-default-port 4123)
 (defvar myutils/cider-default-host "127.0.0.1")
@@ -280,6 +280,11 @@ node_modules instalation."
   (interactive)
   (cider-connect (list :host myutils/cider-default-host
                        :port myutils/cider-default-port)))
+
+(defun myutils/clojure-occur-def ()
+  (interactive)
+  (let ((list-matching-lines-face nil))
+    (occur "^[ ]*(def+")))
 
 ;;
 ;;
