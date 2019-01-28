@@ -138,7 +138,8 @@ buffer and a (PDB) appears)."
           (python-shell--interpreter-args nil)
           (buff-process (get-buffer-process buff)))
       (set-process-filter buff-process 'comint-output-filter)
-      (inferior-python-mode))))
+      (inferior-python-mode)
+      (yas-minor-mode-on))))
 
 (defun myutils/compilation-filter-drop-to-python-on-pdb (buff-getter)
   "When compilation enters '(Pdb)', activates the inferior-python-mode
