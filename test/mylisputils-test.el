@@ -16,8 +16,8 @@
       (should (equal python-path "PATH2:PATH1")))))
 
 (ert-deftest test-call-shell-command-kill-buffer ()
-  (cl-letf (((symbol-function 'read-string) (-const "")))
-    (myutils/call-shell-command "echo 'hola'" "mybuff")
+  (cl-letf (((symbol-function 'read-string) (lambda (_) (-const "") (sleep-for 1))))
+    (myutils/call-shell-command "echo hola" "mybuff")
     (should (equal (get-buffer "mybuff") nil))))
 
 (ert-deftest test-call-shell-command-does-not-kill-buffer ()
@@ -129,5 +129,9 @@
       (myutils/python-activate-venv)
       (should (equal call-interactively-arg #'pyvenv-activate)))))
 
+(ert-deftest myutils/with-compile-opts ()
+  (myutils/with-compile-opts "*buffname*" "my command"
+    (should (equal (funcall compilation-buffer-name-function) "*buffname*"))
+    (should (equal compile-command "my command"))))
 
 ;;; mylisputils-test.el ends here

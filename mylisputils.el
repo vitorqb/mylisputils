@@ -122,6 +122,14 @@
   (if (equal (current-message) nil)
       (message msg)))
 
+(defmacro myutils/with-compile-opts (buffname cmd &rest body)
+  "Evaluates body after binding compilation functions to set the
+  buffer name and the default command"
+  (declare (indent 2))
+  `(-let ((compilation-buffer-name-function (-const ,buffname))
+          (compile-command ,cmd))
+     ,@body))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
