@@ -92,6 +92,28 @@
       (myutils/remove-whitespace-and-newline)
       (should (equal (buffer-string) text)))))
 
+(ert-deftest test-myutils/remove-with-elipsis ()
+  (with-temp-buffer
+    (dolist (prefix '("First" "Second" "Third" "Fourth"))
+      (insert (concat prefix " Line."))
+      (newline))
+    ;; Put's the pointer at the third row
+    (goto-line 3)
+
+    ;; Calls it once
+    (myutils/remove-with-elipsis)
+    (beginning-of-buffer)
+    (dolist (expected-line '("First Line.\n" "Second Line.\n" "[...]\n" "Fourth Line.\n"))
+      (should (string-equal (thing-at-point 'line t) expected-line))
+      (next-line))
+
+    ;; Calls again
+    (goto-line 3)
+    (myutils/remove-with-elipsis)
+    (beginning-of-buffer)
+    (dolist (expected-line '("First Line.\n" "[...]\n" "Fourth Line.\n"))
+      (should (string-equal (thing-at-point 'line t) expected-line))
+      (next-line))))
 
 (ert-deftest test-myutils/invoke-prompt-for-command ()
   (with-temp-buffer
