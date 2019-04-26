@@ -130,6 +130,33 @@
           (compile-command ,cmd))
      ,@body))
 
+(defun myutils/remove-with-elipsis ()
+  "Removes the current line and inserts an elipsis [...]
+   If an elipsis is on the current line, removes the previous one."
+  (interactive)
+  (cl-flet ((current-line-string
+             ()
+             (thing-at-point 'line t))
+            (current-line-is-elipses
+             ()
+             (string-match-p elipsis-regex (current-line-string))))
+    (-let ((elipsis-regex "^\\[\\.\\.\\.\\]$"))
+      (beginning-of-line)
+      (if (string-match-p elipsis-regex (current-line-string))
+          ;; Already have an elipses, kill prev line
+          (progn
+            (goto-char (- (point) 1))
+            (beginning-of-line)
+            (kill-line)
+            (if (not (string-match-p elipsis-regex (current-line-string)))
+                (delete-char 1)))
+        ;; No elipsis, put one
+        (progn
+          (when (not (string-equal "\n" (current-line-string)))
+            (kill-line))
+          (insert "[...]")
+          (beginning-of-line))))))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
