@@ -156,4 +156,12 @@
     (should (equal (funcall compilation-buffer-name-function) "*buffname*"))
     (should (equal compile-command "my command"))))
 
+(ert-deftest myutils/truncate-compile-buffer ()
+  (let ((buff (compile "sleep 2 && seq 1 10")))
+    (myutils/truncate-compile-buffer 5 buff)
+    (sleep-for 3)
+    (with-current-buffer buff
+      ;; We have 7 lines because of compilation finished (I think?)
+      (should (equal (count-lines (point-min) (point-max)) 7)))))
+
 ;;; mylisputils-test.el ends here

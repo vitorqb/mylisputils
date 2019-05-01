@@ -130,6 +130,12 @@
           (compile-command ,cmd))
      ,@body))
 
+(defun myutils/truncate-compile-buffer (&optional n buff)
+  "Truncates the max rows of the compile buffer."
+  (with-current-buffer (or buff (current-buffer))
+    (set (make-local-variable 'comint-buffer-maximum-size) (or n 2500))
+    (add-hook 'compilation-filter-hook 'comint-truncate-buffer nil t)))
+
 (defun myutils/remove-with-elipsis ()
   "Removes the current line and inserts an elipsis [...]
    If an elipsis is on the current line, removes the previous one."
