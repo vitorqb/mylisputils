@@ -169,6 +169,10 @@
     (copy-file file-name destination)
     (message (format "Copied %s to %s" file-name destination))))
 
+(defun myutils/copy-buffer-contents ()
+  (interactive)
+  (copy-region-as-kill (point-min) (point-max)))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
