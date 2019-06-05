@@ -140,6 +140,13 @@
     (set (make-local-variable 'comint-buffer-maximum-size) (or n 2500))
     (add-hook 'compilation-filter-hook 'comint-truncate-buffer nil t)))
 
+(defun myutils/compile-with-tramp-sudo (default-dir command)
+  (interactive)
+  (-let ((default-directory (concat "/sudo::" default-dir))
+         (compile-command command))
+    (-let [compilation-buffer (call-interactively #'compile)]
+      (switch-to-buffer-other-window compilation-buffer))))
+
 (defun myutils/remove-with-elipsis ()
   "Removes the current line and inserts an elipsis [...]
    If an elipsis is on the current line, removes the previous one."
