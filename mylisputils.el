@@ -27,6 +27,10 @@
   '("\\*ag search.+" "\\*Occur\\*" "magit-\\(log\\|diff\\)")
   "A list of regexp for buffers to kill when cleaning, if name matches.")
 
+(defvar myutils/frozen-files-dir
+  "~/frozen-files"
+  "A directory used by the `freeze-file` command to freeze a file.")
+
 (defun myutils/add-to-generic-path (x y)
   "Adds 'x' to some environmental variable 'y' (like PYTHONPATH)"
   (setenv y (concat x ":" (getenv y))))
@@ -152,6 +156,18 @@
       (progn
         (kill-whole-line)
         (save-excursion (insert "[...]\n"))))))
+
+(defun myutils/freeze-file (file-name)
+  (interactive (list (buffer-file-name)))
+  (when (or (not file-name) (not (file-readable-p file-name)))
+    (error "Could not find file to freeze."))
+  (-let* ((file-name-no-dir (file-name-nondirectory file-name))
+          (datetime-str (format-time-string "%Y-%m-%dT%H:%M:%S"))
+          (frozen-file-name (format "%s_%s" file-name-no-dir datetime-str))
+          (destination (myutils/concat-file myutils/frozen-files-dir
+                                            frozen-file-name)))
+    (copy-file file-name destination)
+    (message (format "Copied %s to %s" file-name destination))))
 
 ;; -----------------------------------------------------------------------------
 ;; Python utils
@@ -324,5 +340,3 @@ node_modules instalation."
 
 (provide 'mylisputils)
 ;;; mylisputils.el ends here
-
-
