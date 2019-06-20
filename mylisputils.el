@@ -111,6 +111,13 @@
        (kill-new)
        (message "Copied %s to the clipboard!")))
 
+(defun myutils/copy-file-path-from-other-window-to-clipboard ()
+  "Calls `other-window`, `copy-file-path-to-clipboard`, and comes back"
+  (interactive)
+  (save-window-excursion
+    (call-interactively #'other-window)
+    (myutils/copy-file-path-to-clipboard)))
+
 (defun myutils/duplicate-buffer ()
   "Displays a copy of the current buffer in a new buffer and switch to it"
   (interactive)
