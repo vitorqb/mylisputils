@@ -35,6 +35,10 @@
   "Adds 'x' to some environmental variable 'y' (like PYTHONPATH)"
   (setenv y (concat x ":" (getenv y))))
 
+(defun myutils/add-to-path (x)
+  "Adds the string x to the env var PATH"
+  (myutils/add-to-generic-path x "PATH"))
+
 (defun myutils/add-to-pythonpath (x)
   "Adds the string x to the environmental variable PYTHONPATH"
   (myutils/add-to-generic-path x "PYTHONPATH"))
