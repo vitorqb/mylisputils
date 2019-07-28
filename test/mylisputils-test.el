@@ -164,4 +164,18 @@
       ;; We have 7 lines because of compilation finished (I think?)
       (should (equal (count-lines (point-min) (point-max)) 7)))))
 
+(ert-deftest myutils/already-in-path? ()
+  (-let* ((m-getenv-vars)               ;Stores args to getenv
+          (m-PATH "PATH/ONE:PATH/TWO")) ;Mock's getenv
+    (cl-letf (((symbol-function 'getenv) (lambda (x)
+                                          (setq m-getenv-vars x)
+                                          m-PATH)))
+
+      ;; Base test -> is in PATH
+      (should (myutils/already-in-path? "PATH/ONE" "PYTHONPATH"))
+      (should (equal m-getenv-vars "PYTHONPATH"))
+
+      ;; False result
+      (should (not (myutils/already-in-path? "PATH/THREE"))))))
+
 ;;; mylisputils-test.el ends here

@@ -43,6 +43,12 @@
   "Adds the string x to the environmental variable MYPYPATH"
   (myutils/add-to-generic-path x "MYPYPATH"))
 
+(cl-defun myutils/already-in-path? (x &optional (path-var "PATH"))
+  "Returns t if `x` in the environmental PATH-like variable `path-var`.
+  `path-var` defaults to \"PATH\"."
+  (-let [equal-to-x? (-partial 'string-equal x)]
+    (->> path-var getenv (s-split ":") (-any? equal-to-x?))))
+
 (defun myutils/call-shell-command (c &optional bname)
   "Calls a shell command, put's the result in a new buffer
   and prompts to user whether to keep it or not.
