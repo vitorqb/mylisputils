@@ -53,6 +53,21 @@
   (-let [equal-to-x? (-partial 'string-equal x)]
     (->> path-var getenv (s-split ":") (-any? equal-to-x?))))
 
+(defun myutils/relative-path (destination &optional origin)
+  "Uses `realpath` to find the path for `destination` relative to `origin`"
+  (let* ((origin (or origin default-directory))
+         (quoted-origin (shell-quote-argument origin))
+         (quoted-destination (shell-quote-argument destination)))
+    (-> "realpath --relative-to=%s %s"
+        (format quoted-origin quoted-destination)
+        (shell-command-to-string)
+        (s-trim))))
+
+(defun myutils/copy-relative-path (destination)
+  "Same as `myutils/relative-path`, but don't take origin and copies to kill ring"
+  (interactive "fFile:")
+  (kill-new (myutils/relative-path destination)))
+
 (defun myutils/call-shell-command (c &optional bname)
   "Calls a shell command, put's the result in a new buffer
   and prompts to user whether to keep it or not.

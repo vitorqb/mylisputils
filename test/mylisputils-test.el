@@ -178,4 +178,22 @@
       ;; False result
       (should (not (myutils/already-in-path? "PATH/THREE"))))))
 
+(ert-deftest myutils/relative-path ()
+  (-let* ((shell-command-to-string-vars) ;Stores args to shell-command-to-string
+          (path "/home/foo bar baz")
+          (current-dir "/boz")
+          (fake-result "FAKE_RESULT"))
+    ;; Mocks shell-command-to-string
+    (cl-letf (((symbol-function 'shell-command-to-string)
+               (lambda (x)
+                 (setq shell-command-to-string-vars x)
+                 fake-result)))
+
+      ;; When calling, fake-result should be returned
+      (should (string-equal (myutils/relative-path path current-dir) fake-result))
+
+      ;; And the correct command sent to shell
+      (should (string-equal shell-command-to-string-vars
+                            "realpath --relative-to=/home/foo\\ bar\\ baz /boz")))))
+
 ;;; mylisputils-test.el ends here
