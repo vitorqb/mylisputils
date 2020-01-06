@@ -196,4 +196,8 @@
       (should (string-equal shell-command-to-string-vars
                             "realpath --relative-to=/boz /home/foo\\ bar\\ baz")))))
 
+(ert-deftest myutils/date-in-all-formats ()
+  (should (equal (-map #'format-time-string myutils/known-datetime-formats)
+                 (myutils/date-in-all-formats))))
+
 ;;; mylisputils-test.el ends here

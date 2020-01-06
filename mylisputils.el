@@ -31,6 +31,14 @@
   "~/frozen-files"
   "A directory used by the `freeze-file` command to freeze a file.")
 
+(defvar myutils/known-datetime-formats
+  '("%Y-%m-%dT%H:%M:%S"
+    "%Y-%m-%d"
+    "%Y%m%d"
+    "%Y%m%dT%H%M%S")
+  "A list of known date(time) formats.")
+
+;; Functions
 (defun myutils/add-to-generic-path (x y)
   "Adds 'x' to some environmental variable 'y' (like PYTHONPATH)"
   (setenv y (concat x ":" (getenv y))))
@@ -104,6 +112,20 @@
   "Inserts the curent date as YYYYMMDD"
   (interactive)
   (insert (format-time-string "%Y%m%d")))
+
+(defun myutils/date-in-all-formats ()
+  "Returns a list of all date formats."
+  (--map (format-time-string it) myutils/known-datetime-formats))
+
+(defun myutils/insert-formated-date ()
+  "Shows the user different formats for the date and asks it to choose one to insert or copy."
+  (interactive)
+  (ivy-read
+   "Date(time): "
+   (myutils/date-in-all-formats)
+   :action '(1
+             ("i" insert "Insert")
+             ("w" kill-new "Copy"))))
 
 (defun myutils/remove-whitespace-and-newline ()
   "Removes next character until it is no longer whitespace or newline"
