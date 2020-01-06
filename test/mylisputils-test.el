@@ -194,6 +194,6 @@
 
       ;; And the correct command sent to shell
       (should (string-equal shell-command-to-string-vars
-                            "realpath --relative-to=/home/foo\\ bar\\ baz /boz")))))
+                            "realpath --relative-to=/boz /home/foo\\ bar\\ baz")))))
 
 ;;; mylisputils-test.el ends here
