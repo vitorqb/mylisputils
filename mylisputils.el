@@ -13,6 +13,9 @@
      
 ;; Do whatever you want. No warranties.
 
+(setq mylisputils-version "____VERSION____")
+(defun myutils/version () (interactive) (message mylisputils-version))
+
 ;;; code
 (require 'dash)
 (require 'dash-functional)
