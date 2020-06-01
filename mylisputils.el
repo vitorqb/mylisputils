@@ -256,6 +256,14 @@ buffer and a (PDB) appears)."
       (inferior-python-mode)
       (yas-minor-mode-on))))
 
+(defun myutils/drop-to-comint-interactive-mode (buff)
+  "Drops a compilation buffer to comint (interactive) mode."
+  (interactive (list (current-buffer)))
+  (with-current-buffer buff
+    (setq buffer-read-only nil)
+    (set-process-filter (get-buffer-process buff) 'comint-output-filter)
+    (comint-mode)))
+
 (defun myutils/compilation-filter-drop-to-python-on-pdb (buff-getter)
   "When compilation enters '(Pdb)', activates the inferior-python-mode
 on the buffer returned by buff-getter"
