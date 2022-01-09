@@ -393,6 +393,15 @@ node_modules instalation."
   (add-hook 'js2-mode-hook #'myutils/set-eslint-from-node-modules)
   (add-hook 'js2-mode-hook 'flycheck-mode-on-safe))
 
+(defun myutils/active-flycheck-for-typescript ()
+  "Prepares typescript-mode to use eslint from local node_modules"
+  (interactive)
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers '(javascript-jshint)))
+  (flycheck-add-mode 'javascript-eslint 'typescript-mode)
+  (add-hook 'typescript-mode #'myutils/set-eslint-from-node-modules)
+  (add-hook 'typescript-mode 'flycheck-mode-on-safe))
+
 ;; -----------------------------------------------------------------------------
 ;; Cider/Clojure
 ;; -----------------------------------------------------------------------------
