@@ -50,14 +50,6 @@
   "Adds the string x to the env var PATH"
   (myutils/add-to-generic-path x "PATH"))
 
-(defun myutils/add-to-pythonpath (x)
-  "Adds the string x to the environmental variable PYTHONPATH"
-  (myutils/add-to-generic-path x "PYTHONPATH"))
-
-(defun myutils/add-to-mypypath (x)
-  "Adds the string x to the environmental variable MYPYPATH"
-  (myutils/add-to-generic-path x "MYPYPATH"))
-
 (cl-defun myutils/already-in-path? (x &optional (path-var "PATH"))
   "Returns t if `x` in the environmental PATH-like variable `path-var`.
   `path-var` defaults to \"PATH\"."
@@ -351,6 +343,14 @@ classes and fields."
             (-map (-partial #'myutils/concat-file default-directory))
             (-filter #'file-directory-p)
             (car)))
+
+(defun myutils/add-to-pythonpath (x)
+  "Adds the string x to the environmental variable PYTHONPATH"
+  (myutils/add-to-generic-path x "PYTHONPATH"))
+
+(defun myutils/add-to-mypypath (x)
+  "Adds the string x to the environmental variable MYPYPATH"
+  (myutils/add-to-generic-path x "MYPYPATH"))
 
 ;;------------------------------------------------------------------------------
 ;; Js Utils
