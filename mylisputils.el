@@ -229,6 +229,10 @@
   (interactive)
   (copy-region-as-kill (point-min) (point-max)))
 
+(defun myutils/project-relative-file (filepath)
+  "Returns the path to a file relative to VITOR_PROJECTS_DIR"
+  (expand-file-name (myutils/concat-file (getenv "VITOR_PROJECTS_DIR") filepath)))
+
 ;; -----------------------------------------------------------------------------
 ;; Python utils
 ;; -----------------------------------------------------------------------------
