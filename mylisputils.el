@@ -149,7 +149,11 @@
 (defun myutils/copy-file-path-to-clipboard ()
   "Copy the current buffer file path to the clipboard."
   (interactive)
-  (->> (if (equal major-mode 'dired-mode) default-directory (buffer-file-name))
+  (->> (cond
+        ((equal major-mode 'dired-mode) default-directory)
+        ((equal major-mode 'magit-status-mode) default-directory)
+        (t (buffer-file-name)))
+       (expand-file-name)
        (kill-new)
        (message "Copied %s to the clipboard!")))
 
