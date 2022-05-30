@@ -348,9 +348,12 @@ classes and fields."
   "Looks for a venv folder in the current dir. Either returns a string with the
    path for it or nil."
   (-some->> '("venv" ".venv")
-            (-map (-partial #'myutils/concat-file default-directory))
-            (-filter #'file-directory-p)
-            (car)))
+    (-map (lambda (x)
+            (-if-let (dominating-file (locate-dominating-file default-directory x))
+                (file-name-concat dominating-file x))))
+    (-filter #'identity)
+    (-filter #'file-directory-p)
+    (car)))
 
 (defun myutils/add-to-pythonpath (x)
   "Adds the string x to the environmental variable PYTHONPATH"
